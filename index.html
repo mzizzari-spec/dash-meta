@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>St. Marie · Meta Ads</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bone:#F6F6F2;
+    --panel:#FFFFFF;
+    --ink:#15171C;
+    --muted:#6C7180;
+    --faint:#9AA0AC;
+    --hair:#E6E5DD;
+    --gold:#B08D57;
+    --gold-soft:#EFE6D6;
+    --pos:#2F7D55;
+    --neg:#B23B30;
+    --radius:14px;
+    --shadow:0 1px 2px rgba(21,23,28,.04), 0 8px 24px rgba(21,23,28,.04);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    background:var(--bone);
+    color:var(--ink);
+    line-height:1.45;
+    padding:32px 20px 64px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1080px;margin:0 auto}
+
+  /* Header */
+  header{
+    display:flex;justify-content:space-between;align-items:flex-end;
+    gap:24px;flex-wrap:wrap;
+    padding-bottom:18px;margin-bottom:28px;
+    border-bottom:1px solid var(--hair);
+  }
+  .brand{display:flex;flex-direction:column;gap:4px}
+  .eyebrow{
+    font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--gold);
+  }
+  h1{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:30px;font-weight:600;letter-spacing:-.01em;line-height:1.05;
+  }
+  .status{display:flex;flex-direction:column;align-items:flex-end;gap:6px;text-align:right}
+  .live{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12px;font-weight:500;color:var(--muted);
+    background:var(--panel);border:1px solid var(--hair);
+    padding:6px 12px;border-radius:999px;
+  }
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--gold);position:relative}
+  .dot.on{background:var(--pos)}
+  .dot.on::after{
+    content:"";position:absolute;inset:-4px;border-radius:50%;
+    border:1px solid var(--pos);opacity:.5;animation:pulse 2.2s ease-out infinite;
+  }
+  @keyframes pulse{0%{transform:scale(.6);opacity:.6}100%{transform:scale(1.7);opacity:0}}
+  .meta-line{font-size:12px;color:var(--faint)}
+  .btn{
+    font-family:inherit;font-size:12px;font-weight:500;color:var(--ink);
+    background:var(--panel);border:1px solid var(--hair);border-radius:999px;
+    padding:6px 14px;cursor:pointer;transition:border-color .15s,background .15s;
+  }
+  .btn:hover{border-color:var(--gold);background:var(--gold-soft)}
+  .btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+  /* Section labels */
+  .sec-label{
+    font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--faint);margin:34px 0 14px;display:flex;align-items:center;gap:12px;
+  }
+  .sec-label::after{content:"";flex:1;height:1px;background:var(--hair)}
+
+  /* Cards */
+  .grid{display:grid;gap:14px}
+  .primary{grid-template-columns:repeat(3,1fr)}
+  .quad{grid-template-columns:repeat(3,1fr)}
+  .trio{grid-template-columns:repeat(3,1fr)}
+  .strip{grid-template-columns:repeat(5,1fr)}
+
+  .card{
+    background:var(--panel);border:1px solid var(--hair);border-radius:var(--radius);
+    padding:20px;box-shadow:var(--shadow);
+    display:flex;flex-direction:column;gap:10px;min-width:0;
+  }
+  .card .label{
+    font-size:12px;font-weight:500;color:var(--muted);
+    letter-spacing:.01em;
+  }
+  .card .value{
+    font-family:'Space Grotesk',sans-serif;
+    font-variant-numeric:tabular-nums;
+    font-weight:600;letter-spacing:-.02em;color:var(--ink);
+    line-height:1;
+  }
+  .card.big .value{font-size:38px}
+  .card.big .value .cur{font-size:20px;color:var(--muted);font-weight:500;margin-right:4px}
+  .card.sm .value{font-size:25px}
+  .card.sm .value .cur{font-size:15px;color:var(--muted);font-weight:500;margin-right:3px}
+  .card .sub{font-size:11px;color:var(--faint)}
+  .card .value.pending{color:var(--faint);font-size:25px}
+
+  .gold-rule{height:2px;width:34px;background:var(--gold);border-radius:2px;margin-top:2px}
+
+  /* Notes */
+  .note{
+    margin-top:30px;background:var(--panel);border:1px solid var(--hair);
+    border-left:3px solid var(--gold);border-radius:10px;
+    padding:16px 18px;font-size:13px;color:var(--muted);
+  }
+  .note b{color:var(--ink);font-weight:600}
+  .err{display:none;border-left-color:var(--neg)}
+  .err b{color:var(--neg)}
+
+  footer{
+    margin-top:36px;padding-top:16px;border-top:1px solid var(--hair);
+    font-size:11px;color:var(--faint);display:flex;justify-content:space-between;
+    gap:12px;flex-wrap:wrap;
+  }
+
+  @media(max-width:780px){
+    body{padding:24px 14px 48px}
+    h1{font-size:24px}
+    .primary,.quad,.trio{grid-template-columns:repeat(2,1fr)}
+    .strip{grid-template-columns:repeat(2,1fr)}
+    .card.big .value{font-size:30px}
+    header{align-items:flex-start}
+    .status{align-items:flex-start;text-align:left}
+  }
+  @media(max-width:440px){
+    .primary,.quad,.trio,.strip{grid-template-columns:1fr 1fr}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .dot.on::after{animation:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <span class="eyebrow">Meta Ads · Performance</span>
+      <h1>St. Marie</h1>
+    </div>
+    <div class="status">
+      <span class="live"><span class="dot" id="dot"></span><span id="liveText">Carregando dados…</span></span>
+      <span class="meta-line" id="updated">—</span>
+      <button class="btn" id="refresh">Atualizar agora</button>
+    </div>
+  </header>
+
+  <div class="sec-label">Visão do período</div>
+  <div class="grid primary">
+    <div class="card big"><span class="label">Investimento</span><span class="value" data-metric="Cost" data-fmt="brl"></span><span class="gold-rule"></span></div>
+    <div class="card big"><span class="label">Impressões</span><span class="value" data-metric="Impressions" data-fmt="int"></span><span class="gold-rule"></span></div>
+    <div class="card big"><span class="label">Cliques no link</span><span class="value" data-metric="Link clicks" data-fmt="int"></span><span class="gold-rule"></span></div>
+  </div>
+
+  <div class="sec-label">Eficiência</div>
+  <div class="grid quad">
+    <div class="card sm"><span class="label">CTR (link)</span><span class="value" data-metric="CTR (link click-through rate)" data-fmt="pct"></span></div>
+    <div class="card sm"><span class="label">CPC (por clique)</span><span class="value" data-metric="CPC (cost per link click)" data-fmt="brl"></span></div>
+    <div class="card sm"><span class="label">CPM (por mil impr.)</span><span class="value" data-metric="CPM (cost per 1000 impressions)" data-fmt="brl"></span></div>
+    <div class="card sm"><span class="label">Ações</span><span class="value" data-metric="Actions" data-fmt="int"></span></div>
+    <div class="card sm"><span class="label">Custo por ação</span><span class="value" data-metric="Cost per action (CPA)" data-fmt="brl"></span></div>
+    <div class="card sm"><span class="label">Taxa de ação</span><span class="value" data-metric="Action rate %" data-fmt="pct"></span></div>
+  </div>
+
+  <div class="sec-label">Conversas (mensagens)</div>
+  <div class="grid trio">
+    <div class="card sm"><span class="label">Conversas iniciadas</span><span class="value" data-metric="Messaging conversations started" data-fmt="int"></span></div>
+    <div class="card sm"><span class="label">Novos contatos</span><span class="value" data-metric="New messaging contacts" data-fmt="int"></span></div>
+    <div class="card sm"><span class="label">Custo por conversa</span><span class="value" data-metric="Cost per messaging conversations started" data-fmt="brl"></span></div>
+  </div>
+
+  <div class="sec-label">Engajamento</div>
+  <div class="grid strip">
+    <div class="card sm"><span class="label">Engajamentos</span><span class="value" data-metric="Page engagements" data-fmt="int"></span></div>
+    <div class="card sm"><span class="label">Reações</span><span class="value" data-metric="Post reactions" data-fmt="int"></span></div>
+    <div class="card sm"><span class="label">Compartilham.</span><span class="value" data-metric="Post shares" data-fmt="int"></span></div>
+    <div class="card sm"><span class="label">Plays de vídeo</span><span class="value" data-metric="Video play actions" data-fmt="int"></span></div>
+    <div class="card sm"><span class="label">Views 3s</span><span class="value" data-metric="Three-second video views" data-fmt="int"></span></div>
+  </div>
+
+  <div class="note" id="pendNote">
+    <b>Pendências de configuração:</b> ROAS e Alcance (Reach) ainda não aparecem porque a consulta precisa de ajuste —
+    ROAS está retornando 0 e o Alcance exige uma dimensão de data. Os dois entram quando criarmos a aba diária.
+  </div>
+
+  <div class="note err" id="errNote">
+    <b>Não foi possível ler a planilha ao vivo.</b> Os números abaixo são o último snapshot.
+    Confirme que a planilha está compartilhada como “qualquer pessoa com o link pode ver”.
+  </div>
+
+  <footer>
+    <span>Fonte: Facebook Ads via Supermetrics · atualização diária às 9h</span>
+    <span id="mode">snapshot</span>
+  </footer>
+
+</div>
+
+<script>
+  // ---- Config ----
+  var SHEET_ID = "1otFJPumGPHbVjLaHy1yYi1CpTphEOR0qp1wy0aSsIP0";
+  var SHEET_NAME = "Resumo";
+  var CSV_URL = "https://docs.google.com/spreadsheets/d/" + SHEET_ID +
+                "/gviz/tq?tqx=out:csv&sheet=" + encodeURIComponent(SHEET_NAME);
+
+  // ---- Snapshot (fallback, lido em 23/06/2026) ----
+  var SNAPSHOT = {
+    "Cost": "1880.02",
+    "Impressions": "203495",
+    "Link clicks": "3138",
+    "CTR (link click-through rate)": "1.54",
+    "CPC (cost per link click)": "0.6",
+    "CPM (cost per 1000 impressions)": "9.24",
+    "Actions": "22978",
+    "Cost per action (CPA)": "0.08",
+    "Action rate %": "11.29",
+    "Messaging conversations started": "408",
+    "New messaging contacts": "392",
+    "Cost per messaging conversations started": "4.61",
+    "Page engagements": "5859",
+    "Post reactions": "159",
+    "Post shares": "12",
+    "Video play actions": "66949",
+    "Three-second video views": "2530"
+  };
+
+  // ---- Formatters (pt-BR) ----
+  var nfInt = new Intl.NumberFormat('pt-BR');
+  var nfDec = new Intl.NumberFormat('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+
+  function isNum(v){ return v !== "" && v != null && !isNaN(parseFloat(v)); }
+
+  function render(map){
+    var cells = document.querySelectorAll('.value[data-metric]');
+    cells.forEach(function(el){
+      var key = el.getAttribute('data-metric');
+      var fmt = el.getAttribute('data-fmt');
+      var raw = map[key];
+      if(!isNum(raw)){
+        el.classList.add('pending');
+        el.textContent = '—';
+        return;
+      }
+      el.classList.remove('pending');
+      var n = parseFloat(raw);
+      if(fmt === 'brl'){
+        el.innerHTML = '<span class="cur">R$</span>' + nfDec.format(n);
+      } else if(fmt === 'pct'){
+        el.textContent = nfDec.format(n) + '%';
+      } else {
+        el.textContent = nfInt.format(Math.round(n));
+      }
+    });
+  }
+
+  function stamp(){
+    var now = new Date();
+    document.getElementById('updated').textContent =
+      'Lido em ' + now.toLocaleDateString('pt-BR') + ' às ' +
+      now.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+  }
+
+  // ---- Robust CSV parser (handles quoted fields) ----
+  function parseCSV(text){
+    var rows = [], row = [], field = "", i = 0, inQ = false, c;
+    while(i < text.length){
+      c = text[i];
+      if(inQ){
+        if(c === '"'){
+          if(text[i+1] === '"'){ field += '"'; i += 2; continue; }
+          inQ = false; i++; continue;
+        }
+        field += c; i++; continue;
+      }
+      if(c === '"'){ inQ = true; i++; continue; }
+      if(c === ','){ row.push(field); field = ""; i++; continue; }
+      if(c === '\n'){ row.push(field); rows.push(row); row = []; field = ""; i++; continue; }
+      if(c === '\r'){ i++; continue; }
+      field += c; i++;
+    }
+    if(field.length || row.length){ row.push(field); rows.push(row); }
+    return rows;
+  }
+
+  function toMap(rows){
+    var m = {};
+    rows.forEach(function(r){
+      if(r.length >= 2 && r[0]) m[r[0].trim()] = (r[1] || "").trim();
+    });
+    return m;
+  }
+
+  function setLive(on){
+    document.getElementById('dot').classList.toggle('on', on);
+    document.getElementById('liveText').textContent = on ? 'Dados ao vivo' : 'Snapshot';
+    document.getElementById('mode').textContent = on ? 'ao vivo' : 'snapshot';
+    document.getElementById('errNote').style.display = on ? 'none' : 'block';
+  }
+
+  function load(){
+    // pinta snapshot imediatamente
+    render(SNAPSHOT); stamp(); setLive(false);
+    // tenta ao vivo
+    fetch(CSV_URL, {cache:'no-store'})
+      .then(function(res){ if(!res.ok) throw new Error('http'); return res.text(); })
+      .then(function(txt){
+        var map = toMap(parseCSV(txt));
+        if(Object.keys(map).length < 3) throw new Error('empty');
+        render(map); stamp(); setLive(true);
+      })
+      .catch(function(){ setLive(false); });
+  }
+
+  document.getElementById('refresh').addEventListener('click', load);
+  load();
+</script>
+</body>
+</html>
