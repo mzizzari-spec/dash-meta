@@ -7,141 +7,111 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
   :root{
-    --bone:#FFFFFF;
-    --panel:#FFFFFF;
-    --ink:#15171C;
-    --muted:#6C7180;
-    --faint:#9AA0AC;
-    --hair:#E6E5DD;
-    --gold:#B08D57;
-    --gold-soft:#EFE6D6;
-    --pos:#2F7D55;
-    --neg:#B23B30;
-    --radius:14px;
-    --shadow:0 1px 2px rgba(21,23,28,.04), 0 8px 24px rgba(21,23,28,.04);
+    --bone:#F6F6F2; --panel:#FFFFFF; --ink:#15171C; --muted:#6C7180;
+    --faint:#9AA0AC; --hair:#E6E5DD; --gold:#B08D57; --gold-soft:#EFE6D6;
+    --pos:#2F7D55; --neg:#B23B30; --blue:#4A6FA5;
+    --radius:14px; --shadow:0 1px 2px rgba(21,23,28,.04), 0 8px 24px rgba(21,23,28,.04);
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{-webkit-text-size-adjust:100%}
-  body{
-    font-family:'Inter',system-ui,sans-serif;
-    background:var(--bone);
-    color:var(--ink);
-    line-height:1.45;
-    padding:32px 20px 64px;
-    -webkit-font-smoothing:antialiased;
-  }
+  body{font-family:'Inter',system-ui,sans-serif;background:var(--bone);color:var(--ink);
+    line-height:1.45;padding:32px 20px 64px;-webkit-font-smoothing:antialiased}
   .wrap{max-width:1080px;margin:0 auto}
 
-  /* Header */
-  header{
-    display:flex;justify-content:space-between;align-items:flex-end;
-    gap:24px;flex-wrap:wrap;
-    padding-bottom:18px;margin-bottom:28px;
-    border-bottom:1px solid var(--hair);
-  }
+  header{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;
+    flex-wrap:wrap;padding-bottom:18px;margin-bottom:28px;border-bottom:1px solid var(--hair)}
   .brand{display:flex;flex-direction:column;gap:4px}
-  .eyebrow{
-    font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
-    color:var(--gold);
-  }
-  h1{
-    font-family:'Space Grotesk',sans-serif;
-    font-size:30px;font-weight:600;letter-spacing:-.01em;line-height:1.05;
-  }
+  .eyebrow{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+  h1{font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:600;letter-spacing:-.01em;line-height:1.05}
   .status{display:flex;flex-direction:column;align-items:flex-end;gap:6px;text-align:right}
-  .live{
-    display:inline-flex;align-items:center;gap:8px;
-    font-size:12px;font-weight:500;color:var(--muted);
-    background:var(--panel);border:1px solid var(--hair);
-    padding:6px 12px;border-radius:999px;
-  }
+  .live{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:500;
+    color:var(--muted);background:var(--panel);border:1px solid var(--hair);padding:6px 12px;border-radius:999px}
   .dot{width:8px;height:8px;border-radius:50%;background:var(--gold);position:relative}
   .dot.on{background:var(--pos)}
-  .dot.on::after{
-    content:"";position:absolute;inset:-4px;border-radius:50%;
-    border:1px solid var(--pos);opacity:.5;animation:pulse 2.2s ease-out infinite;
-  }
+  .dot.on::after{content:"";position:absolute;inset:-4px;border-radius:50%;
+    border:1px solid var(--pos);opacity:.5;animation:pulse 2.2s ease-out infinite}
   @keyframes pulse{0%{transform:scale(.6);opacity:.6}100%{transform:scale(1.7);opacity:0}}
   .meta-line{font-size:12px;color:var(--faint)}
-  .btn{
-    font-family:inherit;font-size:12px;font-weight:500;color:var(--ink);
-    background:var(--panel);border:1px solid var(--hair);border-radius:999px;
-    padding:6px 14px;cursor:pointer;transition:border-color .15s,background .15s;
-  }
+  .btn{font-family:inherit;font-size:12px;font-weight:500;color:var(--ink);background:var(--panel);
+    border:1px solid var(--hair);border-radius:999px;padding:6px 14px;cursor:pointer;
+    transition:border-color .15s,background .15s}
   .btn:hover{border-color:var(--gold);background:var(--gold-soft)}
   .btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 
-  /* Section labels */
-  .sec-label{
-    font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
-    color:var(--faint);margin:34px 0 14px;display:flex;align-items:center;gap:12px;
-  }
+  .sec-label{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--faint);margin:34px 0 14px;display:flex;align-items:center;gap:12px}
   .sec-label::after{content:"";flex:1;height:1px;background:var(--hair)}
 
-  /* Cards */
   .grid{display:grid;gap:14px}
   .primary{grid-template-columns:repeat(3,1fr)}
   .quad{grid-template-columns:repeat(3,1fr)}
   .trio{grid-template-columns:repeat(3,1fr)}
   .strip{grid-template-columns:repeat(5,1fr)}
+  .cmp{grid-template-columns:repeat(3,1fr)}
 
-  .card{
-    background:var(--panel);border:1px solid var(--hair);border-radius:var(--radius);
-    padding:20px;box-shadow:var(--shadow);
-    display:flex;flex-direction:column;gap:10px;min-width:0;
-  }
-  .card .label{
-    font-size:12px;font-weight:500;color:var(--muted);
-    letter-spacing:.01em;
-  }
-  .card .value{
-    font-family:'Space Grotesk',sans-serif;
-    font-variant-numeric:tabular-nums;
-    font-weight:600;letter-spacing:-.02em;color:var(--ink);
-    line-height:1;
-  }
+  .card{background:var(--panel);border:1px solid var(--hair);border-radius:var(--radius);
+    padding:20px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;min-width:0}
+  .card .label{font-size:12px;font-weight:500;color:var(--muted)}
+  .card .value{font-family:'Space Grotesk',sans-serif;font-variant-numeric:tabular-nums;
+    font-weight:600;letter-spacing:-.02em;color:var(--ink);line-height:1}
   .card.big .value{font-size:38px}
   .card.big .value .cur{font-size:20px;color:var(--muted);font-weight:500;margin-right:4px}
   .card.sm .value{font-size:25px}
   .card.sm .value .cur{font-size:15px;color:var(--muted);font-weight:500;margin-right:3px}
-  .card .sub{font-size:11px;color:var(--faint)}
   .card .value.pending{color:var(--faint);font-size:25px}
-
   .gold-rule{height:2px;width:34px;background:var(--gold);border-radius:2px;margin-top:2px}
 
-  /* Notes */
-  .note{
-    margin-top:30px;background:var(--panel);border:1px solid var(--hair);
-    border-left:3px solid var(--gold);border-radius:10px;
-    padding:16px 18px;font-size:13px;color:var(--muted);
-  }
+  /* comparativo */
+  .cmpcard{background:var(--panel);border:1px solid var(--hair);border-radius:var(--radius);
+    padding:18px 20px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px}
+  .cmpcard .label{font-size:12px;font-weight:500;color:var(--muted)}
+  .cmpcard .now{font-family:'Space Grotesk',sans-serif;font-variant-numeric:tabular-nums;
+    font-size:24px;font-weight:600;letter-spacing:-.02em}
+  .cmpcard .now .cur{font-size:14px;color:var(--muted);font-weight:500;margin-right:3px}
+  .cmprow{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .delta{font-size:12px;font-weight:600;font-variant-numeric:tabular-nums;
+    display:inline-flex;align-items:center;gap:3px}
+  .delta.up{color:var(--pos)} .delta.down{color:var(--neg)} .delta.flat{color:var(--muted)}
+  .cmpcard .prev{font-size:11px;color:var(--faint)}
+
+  /* chart */
+  .chartwrap{background:var(--panel);border:1px solid var(--hair);border-radius:var(--radius);
+    padding:20px;box-shadow:var(--shadow)}
+  .controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+  .chip{font-family:inherit;font-size:12px;font-weight:500;color:var(--muted);background:var(--bone);
+    border:1px solid var(--hair);border-radius:999px;padding:6px 13px;cursor:pointer;transition:all .15s}
+  .chip:hover{border-color:var(--gold)}
+  .chip.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .chip.tog{margin-left:auto}
+  .chip.tog.active{background:var(--gold);border-color:var(--gold);color:#fff}
+  .canvas-box{position:relative;height:320px;margin-top:6px}
+  .proj-note{font-size:12px;color:var(--muted);margin-top:12px;display:flex;gap:8px;align-items:flex-start}
+  .proj-note b{color:var(--ink);font-weight:600}
+
+  .note{margin-top:30px;background:var(--panel);border:1px solid var(--hair);
+    border-left:3px solid var(--gold);border-radius:10px;padding:16px 18px;font-size:13px;color:var(--muted)}
   .note b{color:var(--ink);font-weight:600}
   .err{display:none;border-left-color:var(--neg)}
   .err b{color:var(--neg)}
 
-  footer{
-    margin-top:36px;padding-top:16px;border-top:1px solid var(--hair);
-    font-size:11px;color:var(--faint);display:flex;justify-content:space-between;
-    gap:12px;flex-wrap:wrap;
-  }
+  footer{margin-top:36px;padding-top:16px;border-top:1px solid var(--hair);font-size:11px;
+    color:var(--faint);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 
   @media(max-width:780px){
-    body{padding:24px 14px 48px}
-    h1{font-size:24px}
-    .primary,.quad,.trio{grid-template-columns:repeat(2,1fr)}
+    body{padding:24px 14px 48px} h1{font-size:24px}
+    .primary,.quad,.trio,.cmp{grid-template-columns:repeat(2,1fr)}
     .strip{grid-template-columns:repeat(2,1fr)}
     .card.big .value{font-size:30px}
-    header{align-items:flex-start}
-    .status{align-items:flex-start;text-align:left}
+    header{align-items:flex-start} .status{align-items:flex-start;text-align:left}
+    .canvas-box{height:260px}
   }
   @media(max-width:440px){
-    .primary,.quad,.trio,.strip{grid-template-columns:1fr 1fr}
+    .primary,.quad,.trio,.strip,.cmp{grid-template-columns:1fr 1fr}
   }
-  @media(prefers-reduced-motion:reduce){
-    .dot.on::after{animation:none}
-  }
+  @media(prefers-reduced-motion:reduce){.dot.on::after{animation:none}}
 </style>
 </head>
 <body>
@@ -153,179 +123,357 @@
       <h1>Cordeiro</h1>
     </div>
     <div class="status">
-      <span class="live"><span class="dot" id="dot"></span><span id="liveText">Carregando dados…</span></span>
+      <span class="live"><span class="dot" id="dot"></span><span id="liveText">Carregando…</span></span>
       <span class="meta-line" id="updated">—</span>
       <button class="btn" id="refresh">Atualizar agora</button>
     </div>
   </header>
 
-  <div class="sec-label">Visão do período</div>
+  <!-- PLACAR -->
+  <div class="sec-label">Visão do período (Resumo)</div>
   <div class="grid primary">
     <div class="card big"><span class="label">Investimento</span><span class="value" data-metric="Cost" data-fmt="brl"></span><span class="gold-rule"></span></div>
     <div class="card big"><span class="label">Impressões</span><span class="value" data-metric="Impressions" data-fmt="int"></span><span class="gold-rule"></span></div>
     <div class="card big"><span class="label">Cliques no link</span><span class="value" data-metric="Link clicks" data-fmt="int"></span><span class="gold-rule"></span></div>
   </div>
-
-  <div class="sec-label">Eficiência</div>
-  <div class="grid quad">
+  <div class="grid quad" style="margin-top:14px">
     <div class="card sm"><span class="label">CTR (link)</span><span class="value" data-metric="CTR (link click-through rate)" data-fmt="pct"></span></div>
     <div class="card sm"><span class="label">CPC (por clique)</span><span class="value" data-metric="CPC (cost per link click)" data-fmt="brl"></span></div>
     <div class="card sm"><span class="label">CPM (por mil impr.)</span><span class="value" data-metric="CPM (cost per 1000 impressions)" data-fmt="brl"></span></div>
     <div class="card sm"><span class="label">Ações</span><span class="value" data-metric="Actions" data-fmt="int"></span></div>
     <div class="card sm"><span class="label">Custo por ação</span><span class="value" data-metric="Cost per action (CPA)" data-fmt="brl"></span></div>
-    <div class="card sm"><span class="label">Taxa de ação</span><span class="value" data-metric="Action rate %" data-fmt="pct"></span></div>
-  </div>
-
-  <div class="sec-label">Conversas (mensagens)</div>
-  <div class="grid trio">
     <div class="card sm"><span class="label">Conversas iniciadas</span><span class="value" data-metric="Messaging conversations started" data-fmt="int"></span></div>
-    <div class="card sm"><span class="label">Novos contatos</span><span class="value" data-metric="New messaging contacts" data-fmt="int"></span></div>
-    <div class="card sm"><span class="label">Custo por conversa</span><span class="value" data-metric="Cost per messaging conversations started" data-fmt="brl"></span></div>
   </div>
 
-  <div class="sec-label">Engajamento</div>
-  <div class="grid strip">
-    <div class="card sm"><span class="label">Engajamentos</span><span class="value" data-metric="Page engagements" data-fmt="int"></span></div>
-    <div class="card sm"><span class="label">Reações</span><span class="value" data-metric="Post reactions" data-fmt="int"></span></div>
-    <div class="card sm"><span class="label">Compartilham.</span><span class="value" data-metric="Post shares" data-fmt="int"></span></div>
-    <div class="card sm"><span class="label">Plays de vídeo</span><span class="value" data-metric="Video play actions" data-fmt="int"></span></div>
-    <div class="card sm"><span class="label">Views 3s</span><span class="value" data-metric="Three-second video views" data-fmt="int"></span></div>
+  <!-- TENDENCIA + PROJECAO -->
+  <div class="sec-label">Tendência (últimos 30 dias)</div>
+  <div class="chartwrap">
+    <div class="controls" id="metricChips"></div>
+    <div class="canvas-box"><canvas id="trend"></canvas></div>
+    <div class="proj-note" id="projNote"></div>
   </div>
+
+  <!-- COMPARATIVO -->
+  <div class="sec-label">Comparativo · últimos 7 dias vs. 7 anteriores</div>
+  <div class="grid cmp" id="cmpGrid"></div>
 
   <div class="note" id="pendNote">
-    <b>Pendências de configuração:</b> ROAS e Alcance (Reach) ainda não aparecem porque a consulta precisa de ajuste —
-    ROAS está retornando 0 e o Alcance exige uma dimensão de data. Os dois entram quando criarmos a aba diária.
+    <b>ROAS ainda fora:</b> a métrica retorna 0 em todos os dias — é configuração da consulta, não de data.
+    Quando ajustarmos o valor de conversão na query, ligo o ROAS no placar e nos gráficos.
   </div>
-
   <div class="note err" id="errNote">
-    <b>Não foi possível ler a planilha ao vivo.</b> Os números abaixo são o último snapshot.
-    Confirme que a planilha está compartilhada como “qualquer pessoa com o link pode ver”.
+    <b>Não foi possível ler a planilha ao vivo.</b> Mostrando o último snapshot.
+    Confirme que a planilha está como “qualquer pessoa com o link pode ver”.
   </div>
 
   <footer>
     <span>Fonte: Facebook Ads via Supermetrics · atualização diária às 9h</span>
     <span id="mode">snapshot</span>
   </footer>
-
 </div>
 
 <script>
-  // ---- Config ----
-  var SHEET_ID = "1otFJPumGPHbVjLaHy1yYi1CpTphEOR0qp1wy0aSsIP0";
-  var SHEET_NAME = "Resumo";
-  var CSV_URL = "https://docs.google.com/spreadsheets/d/" + SHEET_ID +
-                "/gviz/tq?tqx=out:csv&sheet=" + encodeURIComponent(SHEET_NAME);
+// ============ CONFIG ============
+var SHEET_ID = "1otFJPumGPHbVjLaHy1yYi1CpTphEOR0qp1wy0aSsIP0";
+function gviz(tab){ return "https://docs.google.com/spreadsheets/d/"+SHEET_ID+
+  "/gviz/tq?tqx=out:csv&sheet="+encodeURIComponent(tab)+"&_="+Date.now(); }
 
-  // ---- Snapshot (fallback, lido em 23/06/2026) ----
-  var SNAPSHOT = {
-    "Cost": "1880.02",
-    "Impressions": "203495",
-    "Link clicks": "3138",
-    "CTR (link click-through rate)": "1.54",
-    "CPC (cost per link click)": "0.6",
-    "CPM (cost per 1000 impressions)": "9.24",
-    "Actions": "22978",
-    "Cost per action (CPA)": "0.08",
-    "Action rate %": "11.29",
-    "Messaging conversations started": "408",
-    "New messaging contacts": "392",
-    "Cost per messaging conversations started": "4.61",
-    "Page engagements": "5859",
-    "Post reactions": "159",
-    "Post shares": "12",
-    "Video play actions": "66949",
-    "Three-second video views": "2530"
-  };
+// ============ SNAPSHOTS (fallback, lido em 25/06/2026) ============
+var RESUMO_SNAP = {
+  "Cost":"1880.02","Impressions":"203495","Link clicks":"3138",
+  "CTR (link click-through rate)":"1.54","CPC (cost per link click)":"0.6",
+  "CPM (cost per 1000 impressions)":"9.24","Actions":"22978",
+  "Cost per action (CPA)":"0.08","Messaging conversations started":"408"
+};
+// Diario: [date, cost, impressions, reach, linkClicks, ctr, cpc, cpa, actions]
+var DIARIO_SNAP = [
+["2026-05-27",376.63,31837,26729,556,1.75,0.68,0.11,3545],
+["2026-05-28",285.46,29066,23985,433,1.49,0.66,0.10,2894],
+["2026-05-29",162.31,19480,18165,337,1.73,0.48,0.07,2489],
+["2026-05-30",131.69,20155,16844,307,1.52,0.43,0.06,2051],
+["2026-05-31",167.76,19857,18912,367,1.85,0.46,0.06,2722],
+["2026-06-01",179.12,23506,21833,327,1.39,0.55,0.06,3146],
+["2026-06-02",217.41,21250,19617,345,1.62,0.63,0.08,2778],
+["2026-06-03",193.89,19657,18019,369,1.88,0.53,0.07,2942],
+["2026-06-04",152.99,18717,16126,316,1.69,0.48,0.06,2538],
+["2026-06-05",137.00,18295,16994,292,1.60,0.47,0.06,2455],
+["2026-06-06",132.41,26544,18545,302,1.14,0.44,0.06,2303],
+["2026-06-07",198.19,26669,23686,413,1.55,0.48,0.06,3381],
+["2026-06-08",193.40,29428,25145,384,1.30,0.50,0.06,3067],
+["2026-06-09",191.57,32028,21623,387,1.21,0.50,0.07,2793],
+["2026-06-10",170.05,25228,19645,336,1.33,0.51,0.06,2626],
+["2026-06-11",161.51,23255,21189,319,1.37,0.51,0.07,2365],
+["2026-06-12",159.84,45624,26117,352,0.77,0.45,0.05,2976],
+["2026-06-13",140.24,27669,16179,309,1.12,0.45,0.08,1682],
+["2026-06-14",194.61,33245,27958,466,1.40,0.42,0.06,3054],
+["2026-06-15",217.46,33450,21253,429,1.28,0.51,0.08,2722],
+["2026-06-16",198.07,24722,20765,423,1.71,0.47,0.08,2470],
+["2026-06-17",171.51,22140,19213,402,1.82,0.43,0.07,2476],
+["2026-06-18",159.09,21786,18525,322,1.48,0.49,0.07,2423],
+["2026-06-19",144.56,23098,19795,309,1.34,0.47,0.06,2285],
+["2026-06-20",134.55,20720,19641,296,1.43,0.45,0.07,2069],
+["2026-06-21",152.07,20477,18718,340,1.66,0.45,0.07,2178],
+["2026-06-22",84.69,11465,10728,175,1.53,0.48,0.07,1189],
+["2026-06-23",228.49,28734,20112,407,1.42,0.56,0.08,2898],
+["2026-06-24",198.82,21716,18759,379,1.75,0.52,0.08,2420],
+["2026-06-25",6.80,459,419,29,6.32,0.23,0.07,101]
+];
 
-  // ---- Formatters (pt-BR) ----
-  var nfInt = new Intl.NumberFormat('pt-BR');
-  var nfDec = new Intl.NumberFormat('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+// Métricas plotáveis: key = índice no array Diario / header no CSV
+var METRICS = [
+  {id:"cost",   col:1, header:"Cost",                          label:"Investimento", fmt:"brl", color:"#B08D57", zero:true,  good:null},
+  {id:"imp",    col:2, header:"Impressions",                   label:"Impressões",   fmt:"int", color:"#15171C", zero:true,  good:1},
+  {id:"reach",  col:3, header:"Reach",                         label:"Alcance",      fmt:"int", color:"#4A6FA5", zero:true,  good:1},
+  {id:"clicks", col:4, header:"Link clicks",                   label:"Cliques",      fmt:"int", color:"#2F7D55", zero:true,  good:1},
+  {id:"ctr",    col:5, header:"CTR (link click-through rate)", label:"CTR (link)",   fmt:"pct", color:"#B08D57", zero:false, good:1},
+  {id:"cpc",    col:6, header:"CPC (cost per link click)",     label:"CPC",          fmt:"brl", color:"#4A6FA5", zero:false, good:-1},
+  {id:"cpa",    col:7, header:"Cost per action (CPA)",         label:"CPA",          fmt:"brl", color:"#B23B30", zero:false, good:-1},
+  {id:"actions",col:8, header:"Actions",                       label:"Ações",        fmt:"int", color:"#2F7D55", zero:true,  good:1}
+];
+var CMP_IDS = ["cost","imp","clicks","ctr","cpa","actions"];
 
-  function isNum(v){ return v !== "" && v != null && !isNaN(parseFloat(v)); }
+// ============ FORMATTERS ============
+var nfInt = new Intl.NumberFormat('pt-BR');
+var nfDec = new Intl.NumberFormat('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+function fmt(v,kind){
+  if(v==null||isNaN(v)) return "—";
+  if(kind==='brl') return 'R$ '+nfDec.format(v);
+  if(kind==='pct') return nfDec.format(v)+'%';
+  return nfInt.format(Math.round(v));
+}
+function fmtHtml(v,kind){
+  if(v==null||isNaN(v)) return '—';
+  if(kind==='brl') return '<span class="cur">R$</span>'+nfDec.format(v);
+  if(kind==='pct') return nfDec.format(v)+'%';
+  return nfInt.format(Math.round(v));
+}
+function isNum(v){ return v!=="" && v!=null && !isNaN(parseFloat(v)); }
+function todayISO(){
+  var d=new Date(); var m=String(d.getMonth()+1).padStart(2,'0'); var day=String(d.getDate()).padStart(2,'0');
+  return d.getFullYear()+'-'+m+'-'+day;
+}
+function brDate(iso){ var p=iso.split('-'); return p.length===3 ? p[2]+'/'+p[1] : iso; }
 
-  function render(map){
-    var cells = document.querySelectorAll('.value[data-metric]');
-    cells.forEach(function(el){
-      var key = el.getAttribute('data-metric');
-      var fmt = el.getAttribute('data-fmt');
-      var raw = map[key];
-      if(!isNum(raw)){
-        el.classList.add('pending');
-        el.textContent = '—';
-        return;
-      }
-      el.classList.remove('pending');
-      var n = parseFloat(raw);
-      if(fmt === 'brl'){
-        el.innerHTML = '<span class="cur">R$</span>' + nfDec.format(n);
-      } else if(fmt === 'pct'){
-        el.textContent = nfDec.format(n) + '%';
-      } else {
-        el.textContent = nfInt.format(Math.round(n));
-      }
-    });
+// ============ CSV PARSER ============
+function parseCSV(text){
+  var rows=[],row=[],f="",i=0,q=false,c;
+  while(i<text.length){ c=text[i];
+    if(q){ if(c==='"'){ if(text[i+1]==='"'){f+='"';i+=2;continue;} q=false;i++;continue;} f+=c;i++;continue; }
+    if(c==='"'){q=true;i++;continue;}
+    if(c===','){row.push(f);f="";i++;continue;}
+    if(c==='\n'){row.push(f);rows.push(row);row=[];f="";i++;continue;}
+    if(c==='\r'){i++;continue;}
+    f+=c;i++;
+  }
+  if(f.length||row.length){row.push(f);rows.push(row);}
+  return rows;
+}
+
+// ============ STATE ============
+var diario = DIARIO_SNAP.slice();  // array de arrays
+var resumo = RESUMO_SNAP;
+var trendChart=null, activeMetric="cost", showProj=false;
+
+// ============ PLACAR ============
+function renderResumo(map){
+  document.querySelectorAll('.value[data-metric]').forEach(function(el){
+    var k=el.getAttribute('data-metric'), kind=el.getAttribute('data-fmt'), raw=map[k];
+    if(!isNum(raw)){ el.classList.add('pending'); el.textContent='—'; return; }
+    el.classList.remove('pending'); el.innerHTML=fmtHtml(parseFloat(raw),kind);
+  });
+}
+
+// ============ SÉRIE (exclui dia parcial de hoje) ============
+function completeRows(){
+  var t=todayISO();
+  return diario.filter(function(r){ return r[0]!==t; });
+}
+function partialRow(){
+  var t=todayISO();
+  return diario.find(function(r){ return r[0]===t; }) || null;
+}
+
+// ============ FORECAST (regressão linear) ============
+function linreg(y){
+  var n=y.length, sx=0,sy=0,sxy=0,sxx=0;
+  for(var i=0;i<n;i++){ sx+=i; sy+=y[i]; sxy+=i*y[i]; sxx+=i*i; }
+  var d=(n*sxx-sx*sx)||1; var m=(n*sxy-sx*sy)/d; var b=(sy-m*sx)/n;
+  return {m:m,b:b,n:n};
+}
+function forecast(y,steps){
+  var r=linreg(y), out=[];
+  for(var i=0;i<steps;i++){ var v=r.m*(r.n+i)+r.b; out.push(v<0?0:v); }
+  return out;
+}
+
+// ============ CHART ============
+function buildChart(){
+  var rows=completeRows();
+  var m=METRICS.find(function(x){return x.id===activeMetric;});
+  var labels=rows.map(function(r){return brDate(r[0]);});
+  var data=rows.map(function(r){return r[m.col];});
+
+  var ds=[{
+    label:m.label, data:data, borderColor:m.color, backgroundColor:m.color+"22",
+    borderWidth:2, tension:.3, pointRadius:2, pointHoverRadius:5, fill:true
+  }];
+
+  if(showProj){
+    var steps=7;
+    var fc=forecast(data, steps);
+    // datas futuras
+    var last=rows[rows.length-1][0]; var fl=[];
+    var base=new Date(last+'T00:00:00');
+    for(var i=1;i<=steps;i++){ var d2=new Date(base); d2.setDate(base.getDate()+i); fl.push(brDate(d2.toISOString().slice(0,10))); }
+    labels=labels.concat(fl);
+    var projData=data.map(function(){return null;});
+    projData[projData.length-1]=data[data.length-1]; // conecta
+    projData=projData.concat(fc);
+    ds[0].data=data.concat(fl.map(function(){return null;}));
+    ds.push({ label:'Projeção', data:projData, borderColor:m.color, borderDash:[5,4],
+      borderWidth:2, pointRadius:0, tension:.2, fill:false });
   }
 
-  function stamp(){
-    var now = new Date();
-    document.getElementById('updated').textContent =
-      'Lido em ' + now.toLocaleDateString('pt-BR') + ' às ' +
-      now.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
-  }
-
-  // ---- Robust CSV parser (handles quoted fields) ----
-  function parseCSV(text){
-    var rows = [], row = [], field = "", i = 0, inQ = false, c;
-    while(i < text.length){
-      c = text[i];
-      if(inQ){
-        if(c === '"'){
-          if(text[i+1] === '"'){ field += '"'; i += 2; continue; }
-          inQ = false; i++; continue;
-        }
-        field += c; i++; continue;
+  var cfg={
+    type:'line',
+    data:{labels:labels, datasets:ds},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{intersect:false,mode:'index'},
+      plugins:{
+        legend:{display:false},
+        tooltip:{ callbacks:{ label:function(c){
+          if(c.parsed.y==null) return null;
+          return (c.dataset.label==='Projeção'?'Projeção: ':'')+fmt(c.parsed.y,m.fmt);
+        }}}
+      },
+      scales:{
+        x:{grid:{display:false}, ticks:{maxTicksLimit:8, color:'#9AA0AC', font:{size:11}}},
+        y:{beginAtZero:m.zero, grid:{color:'#EFEEE8'}, border:{display:false},
+           ticks:{color:'#9AA0AC', font:{size:11}, callback:function(v){return fmt(v,m.fmt);}}}
       }
-      if(c === '"'){ inQ = true; i++; continue; }
-      if(c === ','){ row.push(field); field = ""; i++; continue; }
-      if(c === '\n'){ row.push(field); rows.push(row); row = []; field = ""; i++; continue; }
-      if(c === '\r'){ i++; continue; }
-      field += c; i++;
     }
-    if(field.length || row.length){ row.push(field); rows.push(row); }
-    return rows;
-  }
+  };
+  if(trendChart){ trendChart.destroy(); }
+  trendChart=new Chart(document.getElementById('trend'), cfg);
 
-  function toMap(rows){
-    var m = {};
-    rows.forEach(function(r){
-      if(r.length >= 2 && r[0]) m[r[0].trim()] = (r[1] || "").trim();
+  // nota de projeção
+  var note=document.getElementById('projNote');
+  if(showProj){
+    var fcCost=forecast(data,7).reduce(function(a,b){return a+b;},0);
+    note.innerHTML='<span>📈</span><span><b>Projeção (7 dias): ~'+fmt(fcCost,m.fmt==='int'?'int':m.fmt)+
+      ' em '+m.label.toLowerCase()+'.</b> Estimativa linear sobre os últimos '+data.length+
+      ' dias — apenas indicativa, não considera sazonalidade nem mudanças de campanha.</span>';
+  } else {
+    var pr=partialRow();
+    note.innerHTML= pr ?
+      '<span>•</span><span>Dia de hoje ('+brDate(pr[0])+') está parcial ('+fmt(pr[1],'brl')+
+      ' até agora) e fica fora dos gráficos para não distorcer.</span>' : '';
+  }
+}
+
+// ============ CHIPS ============
+function buildChips(){
+  var box=document.getElementById('metricChips'); box.innerHTML='';
+  METRICS.forEach(function(m){
+    var b=document.createElement('button');
+    b.className='chip'+(m.id===activeMetric?' active':''); b.textContent=m.label;
+    b.onclick=function(){ activeMetric=m.id; buildChips(); buildChart(); };
+    box.appendChild(b);
+  });
+  var t=document.createElement('button');
+  t.className='chip tog'+(showProj?' active':''); t.textContent=(showProj?'✓ ':'')+'Projeção 7d';
+  t.onclick=function(){ showProj=!showProj; buildChips(); buildChart(); };
+  box.appendChild(t);
+}
+
+// ============ COMPARATIVO ============
+function sumRange(rows,col,a,b){ var s=0; for(var i=a;i<b;i++) s+=rows[i][col]; return s; }
+function avgRange(rows,col,a,b){ var s=0,n=0; for(var i=a;i<b;i++){s+=rows[i][col];n++;} return n?s/n:0; }
+function renderCmp(){
+  var rows=completeRows(); var n=rows.length;
+  var grid=document.getElementById('cmpGrid'); grid.innerHTML='';
+  if(n<14){ grid.innerHTML='<div class="cmpcard"><span class="prev">Histórico insuficiente para comparar.</span></div>'; return; }
+  CMP_IDS.forEach(function(id){
+    var m=METRICS.find(function(x){return x.id===id;});
+    var ratio=(m.fmt==='pct'||id==='cpa'||id==='cpc');
+    var cur = ratio ? avgRange(rows,m.col,n-7,n) : sumRange(rows,m.col,n-7,n);
+    var prev= ratio ? avgRange(rows,m.col,n-14,n-7) : sumRange(rows,m.col,n-14,n-7);
+    var dpct = prev? ((cur-prev)/prev*100) : 0;
+    var dir = dpct>0.05?'up':(dpct<-0.05?'down':'flat');
+    var cls='flat';
+    if(m.good!==null && dir!=='flat'){
+      var favorable = (dir==='up' && m.good===1) || (dir==='down' && m.good===-1);
+      cls = favorable?'up':'down';
+    }
+    var arrow = dir==='up'?'▲':(dir==='down'?'▼':'■');
+    var c=document.createElement('div'); c.className='cmpcard';
+    c.innerHTML='<span class="label">'+m.label+(ratio?' (média)':'')+'</span>'+
+      '<div class="cmprow"><span class="now">'+fmtHtml(cur,m.fmt)+'</span>'+
+      '<span class="delta '+cls+'">'+arrow+' '+nfDec.format(Math.abs(dpct))+'%</span></div>'+
+      '<span class="prev">7 dias anteriores: '+fmt(prev,m.fmt)+'</span>';
+    grid.appendChild(c);
+  });
+}
+
+// ============ STATUS ============
+function stamp(){
+  var now=new Date();
+  document.getElementById('updated').textContent='Lido em '+now.toLocaleDateString('pt-BR')+
+    ' às '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+}
+function setLive(on){
+  document.getElementById('dot').classList.toggle('on',on);
+  document.getElementById('liveText').textContent=on?'Dados ao vivo':'Snapshot';
+  document.getElementById('mode').textContent=on?'ao vivo':'snapshot';
+  document.getElementById('errNote').style.display=on?'none':'block';
+}
+
+// ============ LIVE FETCH ============
+function colIndex(headers,name){
+  for(var i=0;i<headers.length;i++){ if((headers[i]||'').trim()===name) return i; }
+  return -1;
+}
+function parseDiarioLive(text){
+  var rows=parseCSV(text); if(rows.length<2) throw new Error('vazio');
+  var h=rows[0];
+  var idx={ date:colIndex(h,'Date') };
+  METRICS.forEach(function(m){ idx[m.id]=colIndex(h,m.header); });
+  if(idx.date<0) throw new Error('sem Date');
+  var out=[];
+  for(var r=1;r<rows.length;r++){
+    var row=rows[r]; if(!row[idx.date]) continue;
+    var arr=[ (row[idx.date]||'').trim() ];
+    METRICS.forEach(function(m){
+      var v=parseFloat((row[idx[m.id]]||'').replace(',','.'));
+      arr[m.col]=isNaN(v)?0:v;
     });
-    return m;
+    out.push(arr);
   }
+  return out;
+}
 
-  function setLive(on){
-    document.getElementById('dot').classList.toggle('on', on);
-    document.getElementById('liveText').textContent = on ? 'Dados ao vivo' : 'Snapshot';
-    document.getElementById('mode').textContent = on ? 'ao vivo' : 'snapshot';
-    document.getElementById('errNote').style.display = on ? 'none' : 'block';
-  }
+function load(){
+  // 1) pinta snapshot
+  diario=DIARIO_SNAP.slice(); resumo=RESUMO_SNAP;
+  renderResumo(resumo); buildChips(); buildChart(); renderCmp(); stamp(); setLive(false);
 
-  function load(){
-    // pinta snapshot imediatamente
-    render(SNAPSHOT); stamp(); setLive(false);
-    // tenta ao vivo
-    fetch(CSV_URL, {cache:'no-store'})
-      .then(function(res){ if(!res.ok) throw new Error('http'); return res.text(); })
-      .then(function(txt){
-        var map = toMap(parseCSV(txt));
-        if(Object.keys(map).length < 3) throw new Error('empty');
-        render(map); stamp(); setLive(true);
-      })
-      .catch(function(){ setLive(false); });
-  }
+  // 2) tenta ao vivo (Resumo + Diario)
+  var pR=fetch(gviz('Resumo'),{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.text();})
+    .then(function(t){ var map={}; parseCSV(t).forEach(function(row){ if(row.length>=2&&row[0]) map[row[0].trim()]=(row[1]||'').trim(); });
+      if(Object.keys(map).length<3) throw 0; resumo=map; renderResumo(map); return true; });
 
-  document.getElementById('refresh').addEventListener('click', load);
-  load();
+  var pD=fetch(gviz('Diario'),{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.text();})
+    .then(function(t){ var d=parseDiarioLive(t); if(d.length<3) throw 0; diario=d; buildChart(); renderCmp(); return true; });
+
+  Promise.allSettled([pR,pD]).then(function(res){
+    var ok = res.some(function(x){return x.status==='fulfilled';});
+    setLive(ok); if(ok) stamp();
+  });
+}
+
+document.getElementById('refresh').addEventListener('click',load);
+load();
 </script>
 </body>
 </html>
